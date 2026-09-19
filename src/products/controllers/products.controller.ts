@@ -3,7 +3,7 @@ import { Get, Post, Delete, Patch, Param, Query, InternalServerErrorException, B
 import { ProductsService } from '../services/products.service.js';
 @Controller('products')
 export class ProductsController {
-    constructor(private readonly ProductsService: ProductsService) { }
+    constructor(private readonly productsService: ProductsService) { }
     @Get()
     getProducts() {
 
