@@ -15,7 +15,11 @@ export class ProductsService {
     ) { }
 
     async getProducts() {
-        return this.productModel.find().select('title price sold rating imageCover category brand');
+        return this.productModel
+            .find()
+            .select('title price sold ratingsAverage ratingsQuantity imageCover category brand')
+            .populate('brand', 'name slug image')
+            .populate('category', 'name slug image');
     }
 
     async createProduct(data: any) {
@@ -23,9 +27,12 @@ export class ProductsService {
     }
 
     async updateProduct(id: string, data: any) {
-        return this.productModel.findByIdAndUpdate(id, data, {
-            new: true,
-        });
+        return this.productModel
+            .findByIdAndUpdate(id, data, {
+                new: true,
+            })
+            .populate('brand', 'name slug image')
+            .populate('category', 'name slug image');
     }
 
     async deleteProduct(id: string) {
@@ -33,6 +40,9 @@ export class ProductsService {
     }
 
     async singleProduct(id: string) {
-        return this.productModel.findById(id);
+        return this.productModel
+            .findById(id)
+            .populate('brand', 'name slug image')
+            .populate('category', 'name slug image');
     }
 }
