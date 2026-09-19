@@ -7,4 +7,4 @@ import { ProductsService } from './services/products.service.js';
   providers: [ProductsService],
   exports: [ProductsService],
 })
-export class ProductsModule { }
+export class ProductsModule {}

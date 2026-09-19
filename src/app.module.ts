@@ -18,4 +18,4 @@ import { ProductsModule } from './products/products.module.js';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
