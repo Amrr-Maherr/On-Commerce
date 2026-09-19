@@ -15,11 +15,19 @@ export class ProductsService {
     ) { }
 
     async getProducts() {
-        return this.productModel
+        const products = await this.productModel
             .find()
+            .limit(24)
             .select('title price sold ratingsAverage ratingsQuantity imageCover category brand')
             .populate('brand', 'name slug image')
             .populate('category', 'name slug image');
+        return {
+            status: "success",
+            results: products.length,
+            data: {
+                "products": products,
+            }
+        };
     }
 
     async createProduct(data: any) {
