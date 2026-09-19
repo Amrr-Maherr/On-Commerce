@@ -2,6 +2,7 @@ import { Controller } from '@nestjs/common';
 import { Get, Post, Delete, Patch, Param, Query, InternalServerErrorException, Body } from '@nestjs/common';
 import { ProductsService } from '../services/products.service.js';
 import { CreateProductDto } from '../dto/create-product.dto.js';
+import { ProductId } from '../dto/product-id.dto.js';
 @Controller('products')
 export class ProductsController {
     constructor(private readonly productsService: ProductsService) { }
@@ -14,15 +15,15 @@ export class ProductsController {
 
     }
     @Patch(":id")
-    updateProduct(@Param("id") id: string) {
+    updateProduct(@Param("id") id: ProductId) {
 
     }
     @Delete(":id")
-    deleteProduct(@Param("id") id: string) {
+    deleteProduct(@Param("id") id: ProductId) {
 
     }
     @Get(":id")
-    singleProduct(@Param("id") id: string) {
+    singleProduct(@Param("id") id: ProductId) {
 
     }
 }
