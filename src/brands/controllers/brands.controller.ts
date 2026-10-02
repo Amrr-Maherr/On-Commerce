@@ -8,9 +8,9 @@ import {
   Post,
 } from '@nestjs/common';
 
+import { MongoIdParamDto } from '../../dto/mongo-id-param.dto.js';
 import { BrandsService } from '../services/brands.service.js';
 import { CreateBrandDto } from '../dto/create-brand.dto.js';
-import { BrandId } from '../dto/brand-id.dto.js';
 import { UpdateBrandDto } from '../dto/update-brand.dto.js';
 
 @Controller('brands')
@@ -29,19 +29,19 @@ export class BrandsController {
 
   @Patch(':id')
   async updateBrand(
-    @Param() params: BrandId,
+    @Param() params: MongoIdParamDto,
     @Body() updateBrandDto: UpdateBrandDto,
   ) {
     return this.brandsService.updateBrand(params.id, updateBrandDto);
   }
 
   @Delete(':id')
-  async deleteBrand(@Param() params: BrandId) {
+  async deleteBrand(@Param() params: MongoIdParamDto) {
     return this.brandsService.deleteBrand(params.id);
   }
 
   @Get(':id')
-  async singleBrand(@Param() params: BrandId) {
+  async singleBrand(@Param() params: MongoIdParamDto) {
     return this.brandsService.singleBrand(params.id);
   }
 }

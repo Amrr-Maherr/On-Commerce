@@ -8,9 +8,9 @@ import {
   Post,
 } from '@nestjs/common';
 
+import { MongoIdParamDto } from '../../dto/mongo-id-param.dto.js';
 import { CategoriesService } from '../services/categories.service.js';
 import { CreateCategoryDto } from '../dto/create-category.dto.js';
-import { CategoryId } from '../dto/category-id.dto.js';
 import { UpdateCategoryDto } from '../dto/update-category.dto.js';
 
 @Controller('categories')
@@ -29,19 +29,19 @@ export class CategoriesController {
 
   @Patch(':id')
   async updateCategory(
-    @Param() params: CategoryId,
+    @Param() params: MongoIdParamDto,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
     return this.categoriesService.updateCategory(params.id, updateCategoryDto);
   }
 
   @Delete(':id')
-  async deleteCategory(@Param() params: CategoryId) {
+  async deleteCategory(@Param() params: MongoIdParamDto) {
     return this.categoriesService.deleteCategory(params.id);
   }
 
   @Get(':id')
-  async singleCategory(@Param() params: CategoryId) {
+  async singleCategory(@Param() params: MongoIdParamDto) {
     return this.categoriesService.singleCategory(params.id);
   }
 }
