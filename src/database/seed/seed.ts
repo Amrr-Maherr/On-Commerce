@@ -249,13 +249,15 @@ async function seed() {
 
       console.log('Seeding categories (using products to determine required categories) ...');
       await Category.deleteMany({ slug: { $in: [...neededCategorySlugs] } });
-      const insertedCategories = filteredCategories.length
-        ? await Category.insertMany(filteredCategories)
-        : [];
+      if (filteredCategories.length) {
+        await Category.insertMany(filteredCategories);
+      }
 
       console.log('Seeding brands (using products to determine required brands) ...');
       await Brand.deleteMany({ slug: { $in: [...neededBrandSlugs] } });
-      const insertedBrands = filteredBrands.length ? await Brand.insertMany(filteredBrands) : [];
+      if (filteredBrands.length) {
+        await Brand.insertMany(filteredBrands);
+      }
 
       // Build maps from all brands/categories (including pre-existing not in needed set)
       const allCategories = await Category.find().lean();
