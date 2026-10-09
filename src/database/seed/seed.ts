@@ -87,8 +87,8 @@ const UserSeedSchema = new Schema(
 
 const CartSeedSchema = new Schema(
   {
-    user: { type: Types.ObjectId, ref: 'User', required: true, unique: true },
-    items: [
+    cartOwner: { type: Types.ObjectId, ref: 'User', required: true, unique: true },
+    products: [
       {
         _id: false,
         product: { type: Types.ObjectId, ref: 'Product', required: true },
@@ -96,8 +96,8 @@ const CartSeedSchema = new Schema(
         price: { type: Number, required: true, min: 0 },
       },
     ],
-    totalPrice: { type: Number, required: true, min: 0 },
-    totalQuantity: { type: Number, required: true, min: 0 },
+    totalCartPrice: { type: Number, required: true, min: 0 },
+    numOfCartItems: { type: Number, required: true, min: 0 },
   },
   { timestamps: true, collection: 'carts', versionKey: false },
 );
@@ -316,6 +316,7 @@ async function seed() {
     } else {
       console.log('\nSeeding carts & orders ...');
       await Promise.all([Cart.deleteMany({}), Order.deleteMany({})]);
+      await Cart.syncIndexes();
 
       const usersForRefs = insertedUsers.map((u) => ({
         _id: u._id as Types.ObjectId,
@@ -336,7 +337,7 @@ async function seed() {
       console.log(`  Inserted ${insertedOrders.length} orders`);
 
       const cartByUser = new Map(
-        insertedCarts.map((c) => [String(c.user), c._id]),
+        insertedCarts.map((c) => [String(c.cartOwner), c._id]),
       );
       const orderByUser = new Map(
         insertedOrders.map((o) => [String(o.user), o._id]),
