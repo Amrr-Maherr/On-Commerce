@@ -32,6 +32,15 @@ export class UsersService {
   }
 
   async singleUser(id: string) {
-    return this.userModel.findById(id);
+    return this.userModel
+      .findById(id)
+      .populate({
+        path: 'cart',
+        populate: { path: 'products.product', select: 'title price imageCover' },
+      })
+      .populate({
+        path: 'orders',
+        populate: { path: 'items.product', select: 'title price imageCover' },
+      });
   }
 }
