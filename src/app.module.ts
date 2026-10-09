@@ -7,6 +7,7 @@ import { AppService } from './app.service.js';
 import { ProductsModule } from './products/products.module.js';
 import { BrandsModule } from './brands/brands.module.js';
 import { CategoriesModule } from './categories/categories.module.js';
+import { UsersModule } from './users/users.module.js';
 
 @Module({
   imports: [
@@ -18,8 +19,9 @@ import { CategoriesModule } from './categories/categories.module.js';
     ProductsModule,
     BrandsModule,
     CategoriesModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
