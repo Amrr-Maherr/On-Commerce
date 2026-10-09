@@ -8,6 +8,7 @@ import { ProductsModule } from './products/products.module.js';
 import { BrandsModule } from './brands/brands.module.js';
 import { CategoriesModule } from './categories/categories.module.js';
 import { UsersModule } from './users/users.module.js';
+import { CartsModule } from './carts/carts.module.js';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UsersModule } from './users/users.module.js';
     BrandsModule,
     CategoriesModule,
     UsersModule,
+    CartsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
