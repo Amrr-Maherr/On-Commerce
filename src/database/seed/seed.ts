@@ -4,6 +4,9 @@ import mongoose, { Schema, Types } from 'mongoose';
 import { brandsData } from './data/brands.data.js';
 import { categoriesData } from './data/categories.data.js';
 import { getProductsData } from './data/products.data.js';
+import { usersData } from './data/users.data.js';
+import { getCartsData } from './data/carts.data.js';
+import { getOrdersData } from './data/orders.data.js';
 
 function loadEnv() {
   if (process.env.DB_URL) return;
@@ -70,6 +73,61 @@ const ProductSeedSchema = new Schema(
   { timestamps: true, collection: 'products', versionKey: false, strict: false },
 );
 
+const UserSeedSchema = new Schema(
+  {
+    name: { type: String, required: true, trim: true },
+    email: { type: String, required: true, trim: true, lowercase: true, unique: true },
+    phoneNumber: { type: String, required: true, trim: true, unique: true },
+    address: { type: String, required: true, trim: true },
+    cart: { type: Types.ObjectId, ref: 'Cart' },
+    orders: { type: Types.ObjectId, ref: 'Orders' },
+  },
+  { timestamps: true, collection: 'users', versionKey: false },
+);
+
+const CartSeedSchema = new Schema(
+  {
+    user: { type: Types.ObjectId, ref: 'User', required: true, unique: true },
+    items: [
+      {
+        _id: false,
+        product: { type: Types.ObjectId, ref: 'Product', required: true },
+        quantity: { type: Number, required: true, min: 1 },
+        price: { type: Number, required: true, min: 0 },
+      },
+    ],
+    totalPrice: { type: Number, required: true, min: 0 },
+    totalQuantity: { type: Number, required: true, min: 0 },
+  },
+  { timestamps: true, collection: 'carts', versionKey: false },
+);
+
+const OrderSeedSchema = new Schema(
+  {
+    user: { type: Types.ObjectId, ref: 'User', required: true },
+    items: [
+      {
+        _id: false,
+        product: { type: Types.ObjectId, ref: 'Product', required: true },
+        quantity: { type: Number, required: true, min: 1 },
+        price: { type: Number, required: true, min: 0 },
+      },
+    ],
+    totalPrice: { type: Number, required: true, min: 0 },
+    totalQuantity: { type: Number, required: true, min: 0 },
+    shippingAddress: { type: String, required: true, trim: true },
+    paymentMethod: { type: String, enum: ['card', 'cash'], required: true },
+    status: {
+      type: String,
+      enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+      required: true,
+    },
+    isPaid: { type: Boolean, default: false },
+    paidAt: { type: Date },
+  },
+  { timestamps: true, collection: 'orders', versionKey: false },
+);
+
 function inferCategorySlug(product: any): string {
   const text = `${product.title ?? ''} ${product.slug ?? ''} ${product.description ?? ''}`.toLowerCase();
   if (
@@ -129,6 +187,9 @@ async function seed() {
   const Brand = mongoose.models.Brand || mongoose.model('Brand', BrandSeedSchema);
   const Category = mongoose.models.Category || mongoose.model('Category', CategorySeedSchema);
   const Product = mongoose.models.Product || mongoose.model('Product', ProductSeedSchema);
+  const User = mongoose.models.User || mongoose.model('User', UserSeedSchema);
+  const Cart = mongoose.models.Cart || mongoose.model('Cart', CartSeedSchema);
+  const Order = mongoose.models.Orders || mongoose.model('Orders', OrderSeedSchema);
 
   try {
     const existingProducts = await Product.find().lean();
@@ -242,6 +303,58 @@ async function seed() {
       for (const slug of neededCategorySlugs) console.log(`  - ${slug}: ${catStats[slug] ?? 0} products`);
       console.log('\nBrand -> product counts:');
       for (const slug of neededBrandSlugs) console.log(`  - ${slug}: ${brandStats[slug] ?? 0} products`);
+    }
+
+    console.log('\nSeeding users ...');
+    await User.deleteMany({});
+    const insertedUsers = await User.insertMany(usersData);
+    console.log(`  Inserted ${insertedUsers.length} users`);
+
+    const allProducts = await Product.find().select('price').lean();
+    if (allProducts.length === 0) {
+      console.log('\nSkipping carts & orders: no products available to reference.');
+    } else {
+      console.log('\nSeeding carts & orders ...');
+      await Promise.all([Cart.deleteMany({}), Order.deleteMany({})]);
+
+      const usersForRefs = insertedUsers.map((u) => ({
+        _id: u._id as Types.ObjectId,
+        address: u.address,
+      }));
+      const productsForRefs = allProducts.map((p) => ({
+        _id: p._id as Types.ObjectId,
+        price: p.price,
+      }));
+
+      const insertedCarts = await Cart.insertMany(
+        getCartsData(usersForRefs, productsForRefs),
+      );
+      const insertedOrders = await Order.insertMany(
+        getOrdersData(usersForRefs, productsForRefs),
+      );
+      console.log(`  Inserted ${insertedCarts.length} carts`);
+      console.log(`  Inserted ${insertedOrders.length} orders`);
+
+      const cartByUser = new Map(
+        insertedCarts.map((c) => [String(c.user), c._id]),
+      );
+      const orderByUser = new Map(
+        insertedOrders.map((o) => [String(o.user), o._id]),
+      );
+
+      const userOps = insertedUsers.map((u) => ({
+        updateOne: {
+          filter: { _id: u._id },
+          update: {
+            $set: {
+              cart: cartByUser.get(String(u._id)),
+              orders: orderByUser.get(String(u._id)),
+            },
+          },
+        },
+      }));
+      await User.bulkWrite(userOps);
+      console.log('  Linked carts & orders to users');
     }
   } catch (error) {
     console.error('Seed failed:', error);

@@ -22,7 +22,8 @@
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
     "seed": "tsx src/database/seed/seed.ts",
     "seed:brands": "tsx src/database/seed/seed.ts",
-    "seed:categories": "tsx src/database/seed/seed.ts"
+    "seed:categories": "tsx src/database/seed/seed.ts",
+    "seed:users": "tsx src/database/seed/seed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^12.0.1",
