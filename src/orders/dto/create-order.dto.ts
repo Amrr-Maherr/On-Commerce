@@ -14,7 +14,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { OrderStatus, PaymentMethod } from '../schemas/orders.schemas.js';
+import { OrderStatus, PaymentMethod } from '../schemas/order.schema.js';
 
 export class OrderItemDto {
   @IsMongoId({ message: 'Product id must be a valid id' })

@@ -9,9 +9,9 @@ import {
 } from '@nestjs/common';
 
 import { MongoIdParamDto } from '../../dto/mongo-id-param.dto.js';
-import { UsersService } from '../services/user.services.js';
-import { CreateUserDto } from '../dto/create-user-dto.js';
-import { UpdateUserDto } from '../dto/update-user-dto.js';
+import { UsersService } from '../services/users.service.js';
+import { CreateUserDto } from '../dto/create-user.dto.js';
+import { UpdateUserDto } from '../dto/update-user.dto.js';
 
 @Controller('users')
 export class UsersController {

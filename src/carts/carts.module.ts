@@ -4,7 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CartsController } from './controllers/carts.controller.js';
 import { CartsService } from './services/carts.service.js';
 
-import { Cart, CartSchema } from './schemas/carts.schemas.js';
+import { Cart, CartSchema } from './schemas/cart.schema.js';
 
 @Module({
   imports: [
