@@ -1,124 +1,256 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# on-commerce
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A simple e-commerce REST API built with **Express.js**, **TypeScript**, and **MongoDB** (Mongoose).
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+The project was converted from NestJS to plain Express so the request flow is easy to follow:
+routes -> controllers -> services -> Mongoose models.
 
-## Description
+## Tech Stack
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Express.js 5
+- TypeScript
+- MongoDB + Mongoose
+- express-validator for request validation
+- morgan for JSON request/response logging
+- Vitest + Supertest
+- oxlint
 
-## Project setup
+## Requirements
 
-```bash
-$ npm install
+- Node.js 20+
+- MongoDB running locally or a MongoDB connection string
+
+## Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+DB_URL=mongodb://localhost:27017/on-commerce
+PORT=3000
 ```
 
-## Compile and run the project
+`DB_URL` and `PORT` are the only environment variables used by the app.
+
+## Installation
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Run tests
+## Running the Project
 
 ```bash
-# unit tests
-$ npm run test
+# development (run TypeScript directly with tsx)
+npm run start
 
-# e2e tests
-$ npm run test:e2e
+# development with file watching
+npm run start:dev
 
-# test coverage
-$ npm run test:cov
+# development with the Node inspector
+npm run start:debug
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Build and Production
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm run build
+npm run start:prod
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+`npm run build` compiles TypeScript into `dist/`, and `npm run start:prod` runs `dist/server.js`.
 
-## Observability
+## Available Scripts
 
-In production applications, observability is essential for understanding how your system behaves, detecting issues early, and maintaining reliable performance.
+| Script | Description |
+|---|---|
+| `npm run start` | Run the server with `tsx` |
+| `npm run start:dev` | Run the server in watch mode |
+| `npm run start:debug` | Run with the Node inspector enabled |
+| `npm run build` | Compile TypeScript to `dist/` |
+| `npm run start:prod` | Run the compiled server |
+| `npm run typecheck` | Type-check without emitting files |
+| `npm run lint` | Run oxlint |
+| `npm test` | Run unit tests |
+| `npm run test:watch` | Run unit tests in watch mode |
+| `npm run test:cov` | Run tests with coverage |
+| `npm run test:e2e` | Run end-to-end tests |
+| `npm run seed` | Seed the database |
 
-[NestJS Observe](https://observe.nestjs.com) automatically instruments your NestJS application, giving you deep visibility into your system with minimal setup:
+## Project Structure
 
-- **Distributed tracing:** Follow requests across services and understand how they flow through your system.
-- **Waterfall analysis:** Visualize request execution and identify slow operations, bottlenecks, and unexpected delays.
-- **Performance analysis:** Analyze application performance in real time and quickly pinpoint areas that need optimization.
-- **Metrics:** Track key application and infrastructure metrics to understand system health and performance trends.
-- **Logging:** Centralize and correlate logs with traces and other telemetry to make debugging easier.
-- **Error tracking:** Detect errors quickly and investigate their root causes with the surrounding context.
-- **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
-- **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
+Each feature is a self-contained module under `src/modules/`.
 
-To add it to this project:
+```text
+src/
+  config/
+    database.ts              # MongoDB connection
+  middlewares/               # request logging, validation, error handling
+  modules/
+    products/
+      products.routes.ts     # Express router
+      products.controller.ts # HTTP request/response handlers
+      products.service.ts    # Database queries and business logic
+      product.schema.ts      # Mongoose schema and model
+      product.validator.ts   # Request body validation
+    brands/
+    categories/
+    users/
+    carts/
+    orders/
+    validation.spec.ts       # Shared validation tests
+  routes/
+    index.ts                 # Combines all module routers
+  utils/                     # Shared validation helper
+  database/seed/             # Seed script and seed data
+  app.controller.ts          # Root controller
+  app.ts                     # Express app and middleware setup
+  server.ts                  # Database connection and server startup
+test/
+  app.e2e-spec.ts            # End-to-end tests
+```
+
+## How a Request Flows
+
+For example, `GET /api/v1/products`:
+
+1. `src/routes/index.ts` mounts the products module router.
+2. `src/modules/products/products.routes.ts` matches the route.
+3. `src/modules/products/products.controller.ts` calls the service.
+4. `src/modules/products/products.service.ts` queries the Mongoose model.
+5. `src/modules/products/product.schema.ts` defines the model.
+
+Controllers only handle HTTP concerns. Database queries and business logic live in services. Everything a feature needs is kept together inside its module folder.
+
+## API
+
+All routes are prefixed with `/api/v1`.
+
+### Root
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/v1` | Returns `Hello World!` |
+
+### Products
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/v1/products` | List products |
+| POST | `/api/v1/products` | Create a product |
+| GET | `/api/v1/products/:id` | Get a product |
+| PATCH | `/api/v1/products/:id` | Update a product |
+| DELETE | `/api/v1/products/:id` | Delete a product |
+
+### Brands
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/v1/brands` | List brands |
+| POST | `/api/v1/brands` | Create a brand |
+| GET | `/api/v1/brands/:id` | Get a brand |
+| PATCH | `/api/v1/brands/:id` | Update a brand |
+| DELETE | `/api/v1/brands/:id` | Delete a brand |
+
+### Categories
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/v1/categories` | List categories |
+| POST | `/api/v1/categories` | Create a category |
+| GET | `/api/v1/categories/:id` | Get a category |
+| PATCH | `/api/v1/categories/:id` | Update a category |
+| DELETE | `/api/v1/categories/:id` | Delete a category |
+
+### Users
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/v1/users` | List users |
+| POST | `/api/v1/users` | Create a user |
+| GET | `/api/v1/users/:id` | Get a user with cart and orders |
+| PATCH | `/api/v1/users/:id` | Update a user |
+| DELETE | `/api/v1/users/:id` | Delete a user |
+
+### Carts
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/v1/carts` | List carts |
+| POST | `/api/v1/carts` | Create a cart |
+| GET | `/api/v1/carts/:id` | Get a cart |
+| PATCH | `/api/v1/carts/:id` | Update a cart |
+| DELETE | `/api/v1/carts/:id` | Delete a cart |
+
+### Orders
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/v1/orders` | List orders |
+| POST | `/api/v1/orders` | Create an order |
+| GET | `/api/v1/orders/:id` | Get an order |
+| PATCH | `/api/v1/orders/:id` | Update an order |
+| DELETE | `/api/v1/orders/:id` | Delete an order |
+
+`POST` requests return `201 Created`. Other successful requests return `200 OK`.
+
+Successful responses use a JSON envelope:
+
+```json
+{
+  "success": true,
+  "data": {}
+}
+```
+
+## Validation and Errors
+
+Request bodies are validated by `express-validator` chains in each module's `*.validator.ts` file (for example, `src/modules/products/product.validator.ts`). Passing those chains to `validateBody` adds validation, error handling, and body cleaning:
+
+- Rejects invalid input with `400 Bad Request`.
+- Removes unknown fields, so only recognized fields reach the database.
+- Replaces `req.body` with the cleaned data from `matchedData`.
+
+Route IDs are validated by `validateIdParam`, which rejects anything that is not a 24-character MongoDB ObjectId.
+
+Error responses follow the original API format:
+
+```json
+{
+  "message": ["Please provide a valid ID"],
+  "error": "Bad Request",
+  "statusCode": 400
+}
+```
+
+Unknown routes return:
+
+```json
+{
+  "message": "Cannot GET /api/v1/unknown",
+  "error": "Not Found",
+  "statusCode": 404
+}
+```
+
+## Seeding the Database
 
 ```bash
-$ npm install @nestjs/observe
+npm run seed
 ```
 
-Then follow the [setup guide](https://docs.nestjs.com/observability/overview) - it takes a single import and an app key.
+The seed script creates brands, categories, products, users, carts, and orders. It uses the `DB_URL` from `.env`.
 
-The free plan needs no payment details and covers 300,000 events a month. You can also browse the [live demo](https://www.observe-demo.nestjs.com/dashboard) first - the whole dashboard over a busy service's data, with nothing to install.
+## Tests
 
-## Resources
+```bash
+npm test
+npm run test:e2e
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+Unit tests cover request validation and the root endpoint. End-to-end tests use Supertest against the Express app.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Auto-instrument your application with [NestJS Observe](https://observe.nestjs.com). Distributed tracing, metrics, and logging made easy. Error tracking and performance monitoring for your NestJS applications.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## Notes
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- Authentication and authorization were not part of the original project and are not included.
+- The database technology and Mongo document structure are unchanged from the original NestJS version.
+- `PATCH /api/v1/brands/:id` currently preserves the original validation behavior, which validates product fields rather than brand fields. This is a known existing quirk, not a migration bug.
