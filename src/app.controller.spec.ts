@@ -6,6 +6,6 @@ describe('AppController', () => {
     const response = await request(app).get('/api/v1');
 
     expect(response.status).toBe(200);
-    expect(response.text).toBe('Hello World!');
+    expect(response.body).toEqual({ success: true, data: 'Hello World!' });
   });
 });

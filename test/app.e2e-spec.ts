@@ -6,7 +6,7 @@ describe('AppController (e2e)', () => {
     const response = await request(app).get('/api/v1');
 
     expect(response.status).toBe(200);
-    expect(response.text).toBe('Hello World!');
+    expect(response.body).toEqual({ success: true, data: 'Hello World!' });
   });
 
   it('returns a 404 response for an unknown route', async () => {
