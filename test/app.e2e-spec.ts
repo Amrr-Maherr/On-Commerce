@@ -1,29 +1,22 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { App } from 'supertest/types';
-import { AppModule } from './../src/app.module.js';
+import { app } from '../src/app.js';
 
 describe('AppController (e2e)', () => {
-  let app: INestApplication<App>;
+  it('GET /api/v1 returns Hello World!', async () => {
+    const response = await request(app).get('/api/v1');
 
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
+    expect(response.status).toBe(200);
+    expect(response.text).toBe('Hello World!');
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
-  });
+  it('returns a 404 response for an unknown route', async () => {
+    const response = await request(app).get('/api/v1/unknown');
 
-  afterEach(async () => {
-    await app.close();
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({
+      message: 'Cannot GET /api/v1/unknown',
+      error: 'Not Found',
+      statusCode: 404,
+    });
   });
 });
