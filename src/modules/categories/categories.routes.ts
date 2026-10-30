@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as categoriesController from './categories.controller.js';
-import { validateBody } from '../../middlewares/validate-body.js';
+import { handleValidation } from '../../middlewares/validation.js';
 import { validateIdParam } from '../../middlewares/validate-id-param.js';
 import {
   validateCreateCategory,
@@ -12,13 +12,15 @@ export const categoriesRouter = Router();
 categoriesRouter.get('/', categoriesController.getCategories);
 categoriesRouter.post(
   '/',
-  validateBody(validateCreateCategory),
+  ...validateCreateCategory,
+  handleValidation,
   categoriesController.createCategory,
 );
 categoriesRouter.patch(
   '/:id',
   validateIdParam,
-  validateBody(validateUpdateCategory),
+  ...validateUpdateCategory,
+  handleValidation,
   categoriesController.updateCategory,
 );
 categoriesRouter.delete(

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as cartsController from './carts.controller.js';
-import { validateBody } from '../../middlewares/validate-body.js';
+import { handleValidation } from '../../middlewares/validation.js';
 import { validateIdParam } from '../../middlewares/validate-id-param.js';
 import {
   validateCreateCart,
@@ -10,11 +10,17 @@ import {
 export const cartsRouter = Router();
 
 cartsRouter.get('/', cartsController.getCarts);
-cartsRouter.post('/', validateBody(validateCreateCart), cartsController.createCart);
+cartsRouter.post(
+  '/',
+  ...validateCreateCart,
+  handleValidation,
+  cartsController.createCart,
+);
 cartsRouter.patch(
   '/:id',
   validateIdParam,
-  validateBody(validateUpdateCart),
+  ...validateUpdateCart,
+  handleValidation,
   cartsController.updateCart,
 );
 cartsRouter.delete('/:id', validateIdParam, cartsController.deleteCart);

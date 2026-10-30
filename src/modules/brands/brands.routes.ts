@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as brandsController from './brands.controller.js';
-import { validateBody } from '../../middlewares/validate-body.js';
+import { handleValidation } from '../../middlewares/validation.js';
 import { validateIdParam } from '../../middlewares/validate-id-param.js';
 import {
   validateCreateBrand,
@@ -12,13 +12,15 @@ export const brandsRouter = Router();
 brandsRouter.get('/', brandsController.getBrands);
 brandsRouter.post(
   '/',
-  validateBody(validateCreateBrand),
+  ...validateCreateBrand,
+  handleValidation,
   brandsController.createBrand,
 );
 brandsRouter.patch(
   '/:id',
   validateIdParam,
-  validateBody(validateUpdateBrand),
+  ...validateUpdateBrand,
+  handleValidation,
   brandsController.updateBrand,
 );
 brandsRouter.delete('/:id', validateIdParam, brandsController.deleteBrand);

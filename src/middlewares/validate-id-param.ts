@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express';
 import { param } from 'express-validator';
-import { handleValidation } from './validate-body.js';
+import { handleValidation } from './validation.js';
 
 export const validateIdParam: RequestHandler[] = [
   param('id')

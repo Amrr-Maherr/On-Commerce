@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as usersController from './users.controller.js';
-import { validateBody } from '../../middlewares/validate-body.js';
+import { handleValidation } from '../../middlewares/validation.js';
 import { validateIdParam } from '../../middlewares/validate-id-param.js';
 import {
   validateCreateUser,
@@ -10,11 +10,17 @@ import {
 export const usersRouter = Router();
 
 usersRouter.get('/', usersController.getUsers);
-usersRouter.post('/', validateBody(validateCreateUser), usersController.createUser);
+usersRouter.post(
+  '/',
+  ...validateCreateUser,
+  handleValidation,
+  usersController.createUser,
+);
 usersRouter.patch(
   '/:id',
   validateIdParam,
-  validateBody(validateUpdateUser),
+  ...validateUpdateUser,
+  handleValidation,
   usersController.updateUser,
 );
 usersRouter.delete('/:id', validateIdParam, usersController.deleteUser);

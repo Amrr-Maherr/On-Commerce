@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as productsController from './products.controller.js';
-import { validateBody } from '../../middlewares/validate-body.js';
+import { handleValidation } from '../../middlewares/validation.js';
 import { validateIdParam } from '../../middlewares/validate-id-param.js';
 import {
   validateCreateProduct,
@@ -12,13 +12,15 @@ export const productsRouter = Router();
 productsRouter.get('/', productsController.getProducts);
 productsRouter.post(
   '/',
-  validateBody(validateCreateProduct),
+  ...validateCreateProduct,
+  handleValidation,
   productsController.createProduct,
 );
 productsRouter.patch(
   '/:id',
   validateIdParam,
-  validateBody(validateUpdateProduct),
+  ...validateUpdateProduct,
+  handleValidation,
   productsController.updateProduct,
 );
 productsRouter.delete('/:id', validateIdParam, productsController.deleteProduct);
