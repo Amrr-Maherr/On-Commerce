@@ -204,11 +204,7 @@ Successful responses use a JSON envelope:
 
 ## Validation and Errors
 
-Request bodies are validated by `express-validator` chains in each module's `*.validator.ts` file (for example, `src/modules/products/product.validator.ts`). Passing those chains to `validateBody` adds validation, error handling, and body cleaning:
-
-- Rejects invalid input with `400 Bad Request`.
-- Removes unknown fields, so only recognized fields reach the database.
-- Replaces `req.body` with the cleaned data from `matchedData`.
+Request bodies are validated by `express-validator` chains in each module's `*.validator.ts` file (for example, `src/modules/products/product.validator.ts`). Each POST and PATCH route runs its chains, then `handleValidation` rejects invalid input with `400 Bad Request`.
 
 Route IDs are validated by `validateIdParam`, which rejects anything that is not a 24-character MongoDB ObjectId.
 
